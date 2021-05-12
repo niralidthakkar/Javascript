@@ -73,10 +73,13 @@ const currencies = new Map([
 
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
-//display balance
-const displayMovements = function (movements) {
+//display movements
+const displayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = '';
-  movements.forEach(function (mov, i) {
+  //sorting
+  const moves = sort ? movements.slice().sort((a, b) => a - b) : movements;
+
+  moves.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
     const html = `
@@ -100,7 +103,7 @@ const createUsernames = function (accs) {
   });
 };
 createUsernames(accounts);
-console.log(accounts);
+//console.log(accounts);
 
 //convert all movements into usd
 const eurToUsd = 1.1;
@@ -132,7 +135,7 @@ const displaysummary = function (acc) {
     .filter(mov => mov > 0)
     .map(deposit => (deposit * acc.interestRate) / 100)
     .filter((int, i, arr) => {
-      console.log(arr);
+      // console.log(arr);
       return int >= 1;
     })
     .reduce((acc, mov) => acc + mov, 0);
@@ -163,3 +166,33 @@ btnLogin.addEventListener('click', function (e) {
     displaysummary(currentAccount);
   }
 });
+//sorting
+
+let sorted = false;
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted;
+});
+
+// testing array methods
+const convertTitleCase = function (title) {
+  const capitalize = str => str[0].toUpperCase() + str.slice(1);
+  const exception = ['a', 'and', 'but', 'the', 'on', 'with', 'is', 'it'];
+  const titleCase = title
+    .toLowerCase()
+    .split(' ')
+    .map(word => (exception.includes(word) ? word : capitalize(word)))
+    .join(' ');
+
+  return capitalize(titleCase);
+};
+
+console.log(convertTitleCase('nirali Darshan Thakkar'));
+console.log(convertTitleCase('This is a nice title but it is too long'));
+console.log(convertTitleCase('and here is the one more example'));
+
+const huge = 52456456456456n;
+const num = 23;
+
+console.log(huge * BigInt(num));
